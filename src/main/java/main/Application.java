@@ -3,11 +3,11 @@ package main;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
-
-import com.sun.tools.javac.code.Attribute.Array;
 
 public class Application {
 
@@ -25,11 +25,14 @@ public class Application {
 			return;
 		}
 		
+		File[] currentImages = {};
 		File[] lastImages = {};
+		File[] differenceDeleteImages = {};
+		File[] differenceAddImages = {};
 		
 		while(true) {
 			
-			File[] currentImages = directory.listFiles(new FileFilter() {
+			currentImages = directory.listFiles(new FileFilter() {
 				
 				@Override
 				public boolean accept(File pathname) {
@@ -43,24 +46,41 @@ public class Application {
 					return false;
 				}
 			});
-									
-			if(currentImages.length == 0)
-				System.out.println("Directory - \"" + pathOriginal + "\" is empty");
 						
-			else if(!Arrays.equals(currentImages, lastImages)) {
+			if(currentImages.length != 0)
+				Arrays.sort(currentImages);
+								
+			if(!Arrays.equals(currentImages, lastImages)) {
+								
 				System.out.println("Directory - \"" + pathOriginal + "\" has been changed");
+					
+				if(currentImages.length == 0) {
+					System.out.println("Directory - \"" + pathOriginal + "\" is empty now");
+					continue;
+				}
+					
 				System.out.println("FILES LIST:");
-				
+					
 				for(var f : currentImages) {
+						
+					if(!Arrays.asList(lastImages).contains(f))
+						Arrays.asList(differenceAddImages).add(f);
+										
 					System.out.println(">>> " + f);
+						
 				}
 				
-				Arrays.mismatch(currentImages, lastImages);
+				for(var f : lastImages) {
+					
+					if(!Arrays.asList(currentImages).contains(f))
+						Arrays.asList(differenceDeleteImages).add(f);
+					
+				}
+												
+				lastImages = currentImages;
 
 			}
-			
-			lastImages = currentImages;
-			
+						
 			Thread.sleep(10000);
 			
 		}		
