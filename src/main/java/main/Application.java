@@ -18,12 +18,12 @@ public class Application {
 		
 		String pathOriginal = "images/original/";
 		String pathRefactor = "images/refactor/";
+		
+		List <String> extensions = new ArrayList<>(Arrays.asList(".jpg", ".jpeg", ".png"));
 				
 		File directoryOriginal = new File (pathOriginal);
 		File directoryRefactor = new File (pathRefactor);
-		
-		List <String> extensions = new ArrayList<>(Arrays.asList(".jpg", ".jpeg", ".png"));
-		
+				
 		if(!directoryOriginal.exists()) {			
 			System.out.println("Directory - \"" + pathOriginal + "\" not found");			
 			return;
